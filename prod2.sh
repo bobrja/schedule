@@ -25,10 +25,10 @@ fi
 if [ -f ${HOME}/backup/2023-09-07_2.dump ]
 then
     # .pgpass file
-    echo "localhost:*:*:postgres:root" > ~/.pgpass
-    echo "127.0.0.1:*:*:postgres:root" >> ~/.pgpass
-    echo "localhost:*:*:schedule:D52PuG70kx(E?}evtAe03wl2b1JbF(R6" >> ~/.pgpass
-    echo "127.0.0.1:*:*:schedule:D52PuG70kx(E?}evtAe03wl2b1JbF(R6" >> ~/.pgpass
+    echo "localhost:*:*:postgres:root" > ${HOME}/.pgpass
+    echo "127.0.0.1:*:*:postgres:root" >> ${HOME}/.pgpass
+    echo "localhost:*:*:schedule:D52PuG70kx(E?}evtAe03wl2b1JbF(R6" >> ${HOME}/.pgpass
+    echo "127.0.0.1:*:*:schedule:D52PuG70kx(E?}evtAe03wl2b1JbF(R6" >> ${HOME}/.pgpass
     chmod 600 ~/.pgpass
 
     # PostgreSQL and create DB
