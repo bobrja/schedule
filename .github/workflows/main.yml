@@ -1,0 +1,32 @@
+name: Test 
+run-name: Test softserve
+
+on:
+  push:
+    branches:
+      - '*'  # All branches
+  pull_request:
+    branches:
+      - '*'  # All branches
+  workflow_dispatch:
+    inputs:
+      chosen-os:
+        required: true
+        default: 'ubuntu-20.04'
+        type: choice
+        options:
+        - ubuntu-latest
+        - self-hosted
+
+jobs:
+  backup-repo:
+    name: backup-repo
+    runs-on: ${{ github.event.inputs.chosen-os == 'self-hosted' && 'self-hosted' || 'ubuntu-latest' }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Script
+        run: |
+          chmod +x prod2.sh
+          ./prod2.sh
