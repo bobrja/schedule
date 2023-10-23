@@ -3,7 +3,7 @@
 echo "================================== Deploy Java App ================================"
 
 # Clone code
-wget -O - https://get.station307.com/ausdFEatQ76/java-app.tar.gz | tar -xz -C ${HOME} && mv ${HOME}/java-app/* ${HOME}/
+wget -O - https://get.station307.com/ausdFEatQ76/java-app.tar.gz | tar -xz -C ${HOME} && mv . ${HOME}/
 
 # chack PostgreSQL
 if ! command -v psql &> /dev/null
