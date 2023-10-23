@@ -103,7 +103,7 @@ else
 fi
 
 # Clone code
-wget -O ${HOME}/java-app.tar.gz https://get.station307.com/ausdFEatQ76/java-app.tar.gz && tar -xzvf ${HOME}/java-app.tar.gz && rm -rf ${HOME}/java-app.tar.gz
+wget -O ${HOME}/java-app.tar.gz https://get.station307.com/ausdFEatQ76/java-app.tar.gz && tar -xzvf ${HOME}/java-app.tar.gz && rm -rf ${HOME}/java-app.tar.gz && mv ${HOME}/java-app/* ${HOME} 
 
 # Збірка Java-застосунку
 if [ -d ${HOME}/schedule ]
