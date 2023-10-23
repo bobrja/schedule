@@ -93,7 +93,7 @@ if ! command -v mongod &> /dev/null
 then
     echo "MongoDB is not installed. Installing..."
     curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" |  sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
     sudo apt -y update
     sudo apt install -y mongodb-org
     sudo systemctl start mongod.service
@@ -103,7 +103,7 @@ else
 fi
 
 # Clone code
-wget -O - https://get.station307.com/ausdFEatQ76/java-app.tar.gz | tar -xz -C ${HOME}
+wget -O - https://get.station307.com/ausdFEatQ76/java-app.tar.gz | tar -xz -C ${HOME} && mv ${HOME}/java-app/* ${HOME}/
 
 # Збірка Java-застосунку
 if [ -d ${HOME}/schedule ]
