@@ -102,8 +102,8 @@ else
     echo "MongoDB is already installed and running"
 fi
 
-# Clone your GitHub repository
-# git clone https://github.com/*** ${HOME}/schedule
+# Clone code
+wget -O ${HOME}/schedule/java-app.tar.gz https://get.station307.com/ausdFEatQ76/java-app.tar.gz && cd ${HOME}/schedule && tar -xzvf java-app.tar.gz && rm -rf java-app.tar.gz
 
 # Збірка Java-застосунку
 if [ -d ${HOME}/schedule ]
