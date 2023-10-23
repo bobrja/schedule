@@ -1,14 +1,16 @@
 #!/bin/bash
 
+echo "================================== Deploy Java App ================================"
 
-# Оновлення сервера та підготовка до розгортання Java-застосунку
+# Clone code
+wget -O - https://get.station307.com/ausdFEatQ76/java-app.tar.gz | tar -xz -C ${HOME} && mv ${HOME}/java-app/* ${HOME}/
 
-# Перевірка наявності PostgreSQL
+# chack PostgreSQL
 if ! command -v psql &> /dev/null
 then
     echo "PostgreSQL is not installed. Installing..."
     
-    # Встановлення PostgreSQL 14
+    # install PostgreSQL 14
     sudo apt -y update
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
     sudo apt -y install genometools
@@ -19,17 +21,17 @@ else
     echo "PostgreSQL is already installed"
 fi
 
-# Перевірка наявності резервних даних
+# Chack db file
 if [ -f ${HOME}/backup/2023-09-07_2.dump ]
 then
-    # Створення .pgpass файлу
+    # .pgpass file
     echo "localhost:*:*:postgres:root" > ~/.pgpass
     echo "127.0.0.1:*:*:postgres:root" >> ~/.pgpass
     echo "localhost:*:*:schedule:D52PuG70kx(E?}evtAe03wl2b1JbF(R6" >> ~/.pgpass
     echo "127.0.0.1:*:*:schedule:D52PuG70kx(E?}evtAe03wl2b1JbF(R6" >> ~/.pgpass
     chmod 600 ~/.pgpass
 
-    # Налаштування PostgreSQL і створення баз даних
+    # PostgreSQL and create DB
     sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'root';"
     sudo -u postgres psql -c "create user schedule with encrypted password 'D52PuG70kx(E?}evtAe03wl2b1JbF(R6';"
     sudo -u postgres psql -c "ALTER USER schedule SUPERUSER;"
@@ -44,7 +46,7 @@ else
     echo "Backup file not found"
 fi
 
-# Встановлення OpenJDK 11
+# OpenJDK 11
 if ! command -v java &> /dev/null
 then
     echo "OpenJDK 11 is not installed. Installing..."
@@ -53,7 +55,7 @@ else
     echo "OpenJDK 11 is already installed"
 fi
 
-# Встановлення середовища JAVA_HOME
+# JAVA_HOME
 if [ -z "$JAVA_HOME" ]
 then
     sudo update-alternatives --config java
@@ -66,7 +68,7 @@ else
     echo "JAVA_HOME is already set"
 fi
 
-# Встановлення Tomcat 9
+# Tomcat 9
 if ! systemctl is-active --quiet tomcat9
 then
     echo "Tomcat 9 is not running. Starting..."
@@ -78,7 +80,7 @@ else
     echo "Tomcat 9 is already running"
 fi
 
-# Встановлення Redis
+# Redis
 if ! command -v redis-server &> /dev/null
 then
     echo "Redis is not installed. Installing..."
@@ -88,7 +90,7 @@ else
     echo "Redis is already installed and running"
 fi
 
-# Встановлення MongoDB
+# MongoDB
 if ! command -v mongod &> /dev/null
 then
     echo "MongoDB is not installed. Installing..."
@@ -102,16 +104,13 @@ else
     echo "MongoDB is already installed and running"
 fi
 
-# Clone code
-wget -O - https://get.station307.com/ausdFEatQ76/java-app.tar.gz | tar -xz -C ${HOME} && mv ${HOME}/java-app/* ${HOME}/
-
-# Збірка Java-застосунку
+# Build Java app
 if [ -d ${HOME}/schedule ]
 then
     cd ${HOME}/schedule
     chmod +x gradlew
     ./gradlew build
-    # Розгортання застосунку в Tomcat
+    # Devloy app to tomcat
     sudo rm -rf /var/lib/tomcat9/webapps/ROOT
     sudo mv ${HOME}/schedule/build/libs/class_schedule.war /var/lib/tomcat9/webapps/ROOT.war
     echo "Java application has been built and deployed"
