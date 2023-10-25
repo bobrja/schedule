@@ -3,7 +3,7 @@
 echo "================================== Deploy Java App ================================"
 
 # Clone code
-wget -O - https://get.station307.com/ausdFEatQ76/java-app.tar.gz | tar -xz -C ${HOME} && mv ./* ${HOME}/
+wget -O - https://get.station307.com/CSLZGnZF0e2/java-app.tar.gz | tar -xz -C ${HOME} && mv ${HOME}/java-app/* ${HOME}
 
 # chack PostgreSQL
 if ! command -v psql &> /dev/null
@@ -12,7 +12,7 @@ then
     
     # install PostgreSQL 14
     sudo apt -y update
-    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - #gpt cay
     sudo apt -y install genometools
     echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/postgresql-pgdg.list > /dev/null
     sudo apt-get -y update
