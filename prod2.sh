@@ -3,7 +3,7 @@
 echo "================================== Deploy Java App ================================"
 
 # Clone code
-wget -O - https://get.station307.com/CSLZGnZF0e2/java-app.tar.gz | tar -xz -C ${HOME} && mv ${HOME}/java-app/* ${HOME}
+#git clone git@github.com:bobrja/java-app.git
 
 # chack PostgreSQL
 if ! command -v psql &> /dev/null
@@ -105,9 +105,8 @@ else
 fi
 
 # Build Java app
-if [ -d ${HOME}/schedule ]
+if [ -f ${HOME}/settings.gradle ]
 then
-    cd ${HOME}/schedule
     chmod +x gradlew
     ./gradlew build
     # Devloy app to tomcat
