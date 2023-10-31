@@ -164,7 +164,10 @@ then
     echo "==================================================================================="
     echo "Node.js and npm are not installed. Installing..."
     echo "==================================================================================="
-    sudo apt install -y npm
+    sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash source ~/.nvm/nvm.sh
+    sudo nvm install v16.14.0
+    sudo nvm use v16.14.0
+    sudo npm install -g npm@8.3.1
 else
     echo "==================================================================================="
     echo "Node.js and npm are already installed"
@@ -181,7 +184,7 @@ then
     npm install
     npm run build
     echo "==================================================================================="
-    echo "React Frontend has been built"
+    echo "Frontend has been built"
     echo "==================================================================================="
 else
     echo "==================================================================================="
