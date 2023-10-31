@@ -4,7 +4,7 @@ echo "==========================================================================
 echo "================================== Deploy Java App ================================"
 echo "==================================================================================="
 
-[ ! -f .env ] || export $(grep -v '^#' .env | xargs)
+[ ! -f ${HOME}/${DIR_PROJECT}/.env ] || export $(grep -v '^#' ${HOME}/${DIR_PROJECT}/.env | xargs)
 
 # Clone code
 echo "==================================================================================="
@@ -23,7 +23,6 @@ then
     echo "PostgreSQL is not installed. Installing..."
     echo "==================================================================================="
 
-    
     # install PostgreSQL 14
     sudo apt -y update
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
@@ -46,16 +45,6 @@ then
     chmod 600 ~/.pgpass
 
     # PostgreSQL and create DB
-    #sudo -u postgres psql -c "ALTER USER postgres PASSWORD '${PG_PASSWORD}';"
-    #sudo -u postgres psql -c "create user schedule with encrypted password '${PG_SCHEDULE_PASSWORD}';"
-    #sudo -u postgres psql -c "ALTER USER schedule SUPERUSER;"
-    #createdb -h 127.0.0.1 -p 5432 -U schedule schedule
-    #sudo -u postgres psql -c "grant all privileges on database schedule to schedule;"
-    #sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE schedule TO postgres;"
-    #sudo -u postgres psql -c "create database schedule_test;"
-    #sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE schedule_test TO postgres;"
-
-
     sudo -u postgres psql << EOF
         ALTER USER postgres PASSWORD '${PG_PASSWORD}';
         CREATE USER schedule WITH ENCRYPTED PASSWORD '${PG_SCHEDULE_PASSWORD}';
@@ -63,7 +52,7 @@ then
         CREATE DATABASE schedule OWNER = schedule;
         CREATE DATABASE schedule_test OWNER = postgres;
 EOF
-   
+
     psql -U schedule -h 127.0.0.1 -d schedule -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
     psql --set ON_ERROR_STOP=off -U schedule -h 127.0.0.1 -d schedule -1 -f ${HOME}/${DIR_PROJECT}/backup/2023-09-07_2.dump
 else
@@ -161,11 +150,58 @@ then
     sudo rm -rf /var/lib/tomcat9/webapps/ROOT
     sudo mv ${HOME}/${DIR_PROJECT}/build/libs/class_schedule.war /var/lib/tomcat9/webapps/ROOT.war
     echo "==================================================================================="
-    echo "==========Java application has been built and deployed============================="
+    echo "========= Java application has been built and deployed ============================"
     echo "==================================================================================="
 else
     echo "==================================================================================="
     echo "Java application directory not found"
+    echo "==================================================================================="
+fi
+
+# Node.js and npm
+if ! command -v npm &> /dev/null
+then
+    echo "==================================================================================="
+    echo "Node.js and npm are not installed. Installing..."
+    echo "==================================================================================="
+    sudo apt install -y npm
+else
+    echo "==================================================================================="
+    echo "Node.js and npm are already installed"
+    echo "==================================================================================="
+fi
+
+# Build React Frontend
+if [ -d ${HOME}/${DIR_PROJECT}/frontend ]
+then
+    cd ${HOME}/${DIR_PROJECT}/frontend
+    echo "==================================================================================="
+    echo "Building Frontend"
+    echo "==================================================================================="
+    npm install
+    npm run build
+    echo "==================================================================================="
+    echo "React Frontend has been built"
+    echo "==================================================================================="
+else
+    echo "==================================================================================="
+    echo "Frontend directory not found"
+    echo "==================================================================================="
+fi
+
+# Copy Frontend Build to Java Project
+if [ -d ${HOME}/${DIR_PROJECT}/frontend/build ]
+then
+    echo "==================================================================================="
+    echo "Copying Frontend Build to Java Project"
+    echo "==================================================================================="
+    cp -r ${HOME}/${DIR_PROJECT}/frontend/build/* ${HOME}/${DIR_PROJECT}/src/main/webapps/
+    echo "==================================================================================="
+    echo "Frontend Build has been copied to Java Project"
+    echo "==================================================================================="
+else
+    echo "==================================================================================="
+    echo "Frontend Build directory not found"
     echo "==================================================================================="
 fi
 
